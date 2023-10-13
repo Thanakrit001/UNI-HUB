@@ -1,0 +1,52 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "UNI HUB", HidePremium = False, SaveConfig = true, ConfigFolder = "UNI HUB"})
+--
+local Tab = Window:MakeTab({
+	Name = "Main",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+--
+local Section = Tab:AddSection({
+	Name = "AutoFarm - Muscle Legends"
+})
+--
+local AutoFarmToggle = {
+    Name = "AutoFarmST",
+    Default = false,
+    Callback = function(Value)
+        _G.AutoFarm = Value
+        print("AutoFarmST is now:", Value)
+        if Value then
+            AutoFarm() 
+        end
+    end
+}
+
+Tab:AddToggle(AutoFarmToggle)
+
+function EquipTool(toolName)
+    local player = game:GetService("Players").LocalPlayer
+    local tool = player.Backpack:FindFirstChild(toolName)
+
+    if tool then
+        player.Character.Humanoid:EquipTool(tool)
+    else
+        print("Tool not found in Backpack.")
+    end
+end
+
+function AutoFarm()
+    while _G.AutoFarm do
+        wait()
+        pcall(function()
+            local args = {
+                [1] = "rep"
+            }
+
+            game:GetService("Players").LocalPlayer:WaitForChild("muscleEvent"):FireServer(unpack(args))
+
+            EquipTool("Weight")
+        end)
+    end
+end
