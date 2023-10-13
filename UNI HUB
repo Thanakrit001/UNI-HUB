@@ -22,7 +22,6 @@ Tab:AddDropdown({
 	end    
 })
 --
-
 local AutoFarmToggle = {
     Name = "AutoFarm",
     Default = false,
@@ -34,7 +33,7 @@ local AutoFarmToggle = {
         end
     end
 }
-
+--
 Tab:AddToggle(AutoFarmToggle)
 
 function EquipTool(toolName)
@@ -62,3 +61,35 @@ function AutoFarm()
         end)
     end
 end
+--
+local Tab = Window:MakeTab({
+	Name = "Rebirth",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+--
+local autoRebirthToggle = false
+
+Tab:AddToggle({
+    Name = "AutoRebirth",
+    Default = false,
+    Callback = function(Value)
+        autoRebirthToggle = Value 
+        print("AutoRebirth toggled: " .. tostring(autoRebirthToggle)) 
+    end
+})
+
+while true do
+    wait(1) 
+    
+    if autoRebirthToggle then
+        local args = {
+            [1] = "rebirthRequest"
+        }
+        game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer(unpack(args))
+        print("AutoRebirth triggered.")
+    end
+end
+
+
+
