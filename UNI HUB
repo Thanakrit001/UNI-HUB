@@ -23,7 +23,6 @@ Tab:AddDropdown({
 })
 --
 
-
 local AutoFarmToggle = {
     Name = "AutoFarmST",
     Default = false,
