@@ -24,11 +24,11 @@ Tab:AddDropdown({
 --
 
 local AutoFarmToggle = {
-    Name = "AutoFarmST",
+    Name = "AutoFarm",
     Default = false,
     Callback = function(Value)
         _G.AutoFarm = Value
-        print("AutoFarmST is now:", Value)
+        print("AutoFarm is now:", Value)
         if Value then
             AutoFarm() 
         end
