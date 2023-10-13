@@ -11,6 +11,19 @@ local Section = Tab:AddSection({
 	Name = "AutoFarm - Muscle Legends"
 })
 --
+BLACKPACK = {"Weight", "Situps", "Pushups", "Handstands"}
+
+Tab:AddDropdown({
+	Name = "Select Farm",
+	Options = BLACKPACK,
+  Default = "",
+	Callback = function(Value)
+		SelectFarm = Value
+	end    
+})
+--
+
+
 local AutoFarmToggle = {
     Name = "AutoFarmST",
     Default = false,
@@ -46,7 +59,7 @@ function AutoFarm()
 
             game:GetService("Players").LocalPlayer:WaitForChild("muscleEvent"):FireServer(unpack(args))
 
-            EquipTool("Weight")
+            EquipTool(SelectFarm)
         end)
     end
 end
