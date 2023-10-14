@@ -1,5 +1,5 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "UNI HUB", HidePremium = false, SaveConfig = true, ConfigFolder = "UNI HUB"})
+local Window = OrionLib:MakeWindow({Name = "UNI X HUB", HidePremium = false, SaveConfig = true, ConfigFolder = "UNI X HUB"})
 
 local SelectFarm 
 local AutoFarmBarbell = false
@@ -29,7 +29,28 @@ local function AutoFarm()
         end)
     end
 end
---
+
+local function AutoRebirth()
+    while true do
+        wait(1) 
+        
+        if _G.autoRebirthToggle then
+            local args = {
+                [1] = "rebirthRequest"
+            }
+
+            local success, error = pcall(function()
+                game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer(unpack(args))
+                print("AutoRebirth triggered.")
+            end)
+
+            if not success then
+                warn("AutoRebirth error:", error)
+            end
+        end
+    end
+end
+
 local function AutoFarmBarbellFunction()
     while AutoFarmBarbell do
         wait() 
@@ -49,7 +70,55 @@ local function AutoFarmBarbellFunction()
 
     print("AutoFarm Barbell is now:", AutoFarmBarbell)
 end
+--
+local function AutoFarmFrostPressFunction()
+    while AutoFarmFrostPress do
+        wait() 
+        local player = game.Players.LocalPlayer
+        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        
+        if rootPart then
+            rootPart.CFrame = CFrame.new(-3019.54858, 34.8637543, -337.746155, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+            
+            local interactSeat = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Lift"):WaitForChild("interactSeat")
+            
+            local args = {
+    [1] = "useMachine",
+    [2] = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Press"):WaitForChild("interactSeat")
+}
 
+game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("machineInteractRemote"):InvokeServer(unpack(args))
+            game.Players.LocalPlayer.muscleEvent:FireServer("rep", interactSeat)
+        end
+    end
+
+    print("AutoFarm Frost Press is now:", AutoFarmFrostPress)
+end
+--
+local function AutoFarmFrostSquatFunction()
+    while AutoFarmFrostSquat do
+        wait() 
+        local player = game.Players.LocalPlayer
+        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        
+        if rootPart then
+            rootPart.CFrame = CFrame.new(-2721.65918, 18.7061043, -627.783203, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+            
+            local interactSeat = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Lift"):WaitForChild("interactSeat")
+            
+            local args = {
+    [1] = "useMachine",
+    [2] = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Squat"):WaitForChild("interactSeat")
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("machineInteractRemote"):InvokeServer(unpack(args))
+            game.Players.LocalPlayer.muscleEvent:FireServer("rep", interactSeat)
+        end
+    end
+
+    print("AutoFarm FrostSquat is now:", AutoFarmFrostSquat)
+end
+--
 local Tab = Window:MakeTab({
     Name = "Main",
     Icon = "rbxassetid://4483345998",
@@ -87,7 +156,7 @@ Tab:AddToggle(AutoFarmToggle)
 local Section = Tab:AddSection({
     Name = "AutoFarm Frost Gym (1 Rebirth)"
 })
-
+--
 local AutoFarmBarbellToggle = {
     Name = "AutoFarm Barbell Size >10",
     Default = false,
@@ -101,26 +170,39 @@ local AutoFarmBarbellToggle = {
 }
 Tab:AddToggle(AutoFarmBarbellToggle)
 --
+local AutoFarmFrostPressToggle = {
+    Name = "AutoFarm FrostPress Size >10",
+    Default = false,
+    Callback = function(Value)
+        AutoFarmFrostPress = Value
+        if Value then
+            AutoFarmFrostPressFunction()
+        end
+        print("AutoFarm FrostPress is now:", Value)
+    end    
+}
+Tab:AddToggle(AutoFarmFrostPressToggle)
+--
+local AutoFarmFrostSquatToggle = {
+    Name = "AutoFarm FrostSquat Size >10",
+    Default = false,
+    Callback = function(Value)
+        AutoFarmFrostSquat = Value
+        if Value then
+            AutoFarmFrostSquatFunction()
+        end
+        print("AutoFarm FrostSquat is now:", Value)
+    end    
+}
+Tab:AddToggle(AutoFarmFrostSquatToggle)
+--
 
 local Rebirth = Window:MakeTab({
     Name = "Rebirth",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 })
-
-local rebirthSection = Rebirth:AddSection({
-    Name = "Rebirth"
-})
-
-local AutoRebirthToggle = {
-    Name = "AutoRebirth",
-    Default = false,
-    Callback = function(Value)
-        _G.autoRebirthToggle = Value
-        print("Auto Rebirth is now:", Value)
-    end
-}
-rebirthSection:AddToggle(AutoRebirthToggle)
+spawn(AutoRebirth)
 --
 
 local teleportSec = Window:MakeTab({
