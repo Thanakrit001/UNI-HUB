@@ -2,6 +2,7 @@ local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shl
 local Window = OrionLib:MakeWindow({Name = "UNI HUB", HidePremium = false, SaveConfig = true, ConfigFolder = "UNI HUB"})
 
 local SelectFarm 
+local AutoFarmBarbell = false
 
 local function EquipTool(toolName)
     local player = game:GetService("Players").LocalPlayer
@@ -28,19 +29,25 @@ local function AutoFarm()
         end)
     end
 end
-
-local function AutoRebirth()
-    while true do
-        wait(1) 
+--
+local function AutoFarmBarbellFunction()
+    while AutoFarmBarbell do
+        wait() 
+        local player = game.Players.LocalPlayer
+        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
         
-        if _G.autoRebirthToggle then
-            local args = {
-                [1] = "rebirthRequest"
-            }
-            game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer(unpack(args))
-            print("AutoRebirth triggered.")
+        if rootPart then
+            rootPart.CFrame = CFrame.new(-2917.47314, 12.1008654, -178.445648)
+            
+            local interactSeat = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Lift"):WaitForChild("interactSeat")
+            
+            game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", interactSeat)
+            
+            game.Players.LocalPlayer.muscleEvent:FireServer("rep", interactSeat)
         end
     end
+
+    print("AutoFarm Barbell is now:", AutoFarmBarbell)
 end
 
 local Tab = Window:MakeTab({
@@ -75,8 +82,25 @@ local AutoFarmToggle = {
         end
     end
 }
-
 Tab:AddToggle(AutoFarmToggle)
+
+local Section = Tab:AddSection({
+    Name = "AutoFarm Frost Gym (1 Rebirth)"
+})
+
+local AutoFarmBarbellToggle = {
+    Name = "AutoFarm Barbell Size >10",
+    Default = false,
+    Callback = function(Value)
+        AutoFarmBarbell = Value
+        if Value then
+            AutoFarmBarbellFunction()
+        end
+        print("AutoFarm Barbell is now:", Value)
+    end    
+}
+Tab:AddToggle(AutoFarmBarbellToggle)
+--
 
 local Rebirth = Window:MakeTab({
     Name = "Rebirth",
@@ -84,24 +108,26 @@ local Rebirth = Window:MakeTab({
     PremiumOnly = false
 })
 
-Rebirth:AddToggle({
+local rebirthSection = Rebirth:AddSection({
+    Name = "Rebirth"
+})
+
+local AutoRebirthToggle = {
     Name = "AutoRebirth",
     Default = false,
     Callback = function(Value)
-        _G.autoRebirthToggle = Value 
-        print("AutoRebirth toggled: " .. tostring(_G.autoRebirthToggle)) 
+        _G.autoRebirthToggle = Value
+        print("Auto Rebirth is now:", Value)
     end
-})
+}
+rebirthSection:AddToggle(AutoRebirthToggle)
+--
 
-spawn(AutoRebirth)
-
-local TeleportTab = Window:MakeTab({
+local teleportSec = Window:MakeTab({
     Name = "Teleport",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
-})
-
-local teleportSec = TeleportTab:AddSection({
+}):AddSection({
     Name = "Teleport"
 })
 
@@ -146,4 +172,3 @@ teleportSec:AddButton({
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-8625.93262, 17.2325287, -5730.47217)
     end
 })
-
