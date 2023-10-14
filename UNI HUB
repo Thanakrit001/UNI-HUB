@@ -29,12 +29,14 @@ local function AutoFarm()
         end)
     end
 end
+--
+local AutoRebirth
 
-local function AutoRebirth()
+local function AutoRebirthFunction()
     while true do
         wait(1) 
         
-        if _G.autoRebirthToggle then
+        if _G.AutoRebirthToggle then
             local args = {
                 [1] = "rebirthRequest"
             }
@@ -50,7 +52,7 @@ local function AutoRebirth()
         end
     end
 end
-
+--
 local function AutoFarmBarbellFunction()
     while AutoFarmBarbell do
         wait() 
@@ -92,7 +94,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("machi
         end
     end
 
-    print("AutoFarm Frost Press is now:", AutoFarmFrostPress)
+    print("AutoFarm FrostPress is now:", AutoFarmFrostPress)
 end
 --
 local function AutoFarmFrostSquatFunction()
@@ -152,7 +154,26 @@ local AutoFarmToggle = {
     end
 }
 Tab:AddToggle(AutoFarmToggle)
+--
+local Section = Tab:AddSection({
+    Name = "AutoRebirth"
+})
 
+local AutoRebirthToggle = {
+    Name = "AutoRebirth",
+    Default = false,
+    Callback = function(Value)
+        _G.AutoRebirthToggle = Value
+        print("AutoRebirth is now:", Value)
+        if Value then
+            AutoRebirthFunction() 
+        end
+    end
+}
+
+Tab:AddToggle(AutoRebirthToggle)
+
+--
 local Section = Tab:AddSection({
     Name = "AutoFarm Frost Gym (1 Rebirth)"
 })
@@ -196,15 +217,6 @@ local AutoFarmFrostSquatToggle = {
 }
 Tab:AddToggle(AutoFarmFrostSquatToggle)
 --
-
-local Rebirth = Window:MakeTab({
-    Name = "Rebirth",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
-spawn(AutoRebirth)
---
-
 local teleportSec = Window:MakeTab({
     Name = "Teleport",
     Icon = "rbxassetid://4483345998",
