@@ -1,268 +1,63 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "UNI X HUB", HidePremium = false, SaveConfig = true, ConfigFolder = "UNI X HUB"})
-
-local SelectFarm 
-local AutoFarmBarbell = false
-
-local function EquipTool(toolName)
-    local player = game:GetService("Players").LocalPlayer
-    local tool = player.Backpack:FindFirstChild(toolName)
-
-    if tool then
-        player.Character.Humanoid:EquipTool(tool)
-    else
-        print("Tool not found in Backpack.")
-    end
-end
-
-local function AutoFarm()
-    while _G.AutoFarm do
-        wait()
-        pcall(function()
-            local args = {
-                [1] = "rep"
-            }
-
-            game:GetService("Players").LocalPlayer:WaitForChild("muscleEvent"):FireServer(unpack(args))
-
-            EquipTool(SelectFarm)
-        end)
-    end
-end
---
-local AutoRebirth
-
-local function AutoRebirthFunction()
-    while true do
-        wait(1) 
-        
-        if _G.AutoRebirthToggle then
-            local args = {
-                [1] = "rebirthRequest"
-            }
-
-            local success, error = pcall(function()
-                game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer(unpack(args))
-                print("AutoRebirth triggered.")
-            end)
-
-            if not success then
-                warn("AutoRebirth error:", error)
-            end
-        end
-    end
-end
---
-local function AutoFarmBarbellFunction()
-    while AutoFarmBarbell do
-        wait() 
-        local player = game.Players.LocalPlayer
-        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        
-        if rootPart then
-            rootPart.CFrame = CFrame.new(-2917.47314, 12.1008654, -178.445648)
-            
-            local interactSeat = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Lift"):WaitForChild("interactSeat")
-            
-            game:GetService("ReplicatedStorage").rEvents.machineInteractRemote:InvokeServer("useMachine", interactSeat)
-            
-            game.Players.LocalPlayer.muscleEvent:FireServer("rep", interactSeat)
-        end
-    end
-
-    print("AutoFarm Barbell is now:", AutoFarmBarbell)
-end
---
-local function AutoFarmFrostPressFunction()
-    while AutoFarmFrostPress do
-        wait() 
-        local player = game.Players.LocalPlayer
-        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        
-        if rootPart then
-            rootPart.CFrame = CFrame.new(-3019.54858, 34.8637543, -337.746155, 0, 0, 1, 0, 1, -0, -1, 0, 0)
-            
-            local interactSeat = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Lift"):WaitForChild("interactSeat")
-            
-            local args = {
-    [1] = "useMachine",
-    [2] = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Press"):WaitForChild("interactSeat")
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("machineInteractRemote"):InvokeServer(unpack(args))
-            game.Players.LocalPlayer.muscleEvent:FireServer("rep", interactSeat)
-        end
-    end
-
-    print("AutoFarm FrostPress is now:", AutoFarmFrostPress)
-end
---
-local function AutoFarmFrostSquatFunction()
-    while AutoFarmFrostSquat do
-        wait() 
-        local player = game.Players.LocalPlayer
-        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        
-        if rootPart then
-            rootPart.CFrame = CFrame.new(-2721.65918, 18.7061043, -627.783203, 1, 0, 0, 0, 1, 0, 0, 0, 1)
-            
-            local interactSeat = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Lift"):WaitForChild("interactSeat")
-            
-            local args = {
-    [1] = "useMachine",
-    [2] = workspace:WaitForChild("machinesFolder"):WaitForChild("Frost Squat"):WaitForChild("interactSeat")
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("machineInteractRemote"):InvokeServer(unpack(args))
-            game.Players.LocalPlayer.muscleEvent:FireServer("rep", interactSeat)
-        end
-    end
-
-    print("AutoFarm FrostSquat is now:", AutoFarmFrostSquat)
-end
---
-local Tab = Window:MakeTab({
-    Name = "Main",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
-
-local Section = Tab:AddSection({
-    Name = "AutoFarm - Muscle Legends"
-})
-
-local BLACKPACK = {"Weight", "Situps", "Pushups", "Handstands"}
-
-Tab:AddDropdown({
-    Name = "Select Farm",
-    Options = BLACKPACK,
-    Default = "",
-    Callback = function(Value)
-        SelectFarm = Value
-    end    
-})
-
-local AutoFarmToggle = {
-    Name = "AutoFarm",
-    Default = false,
-    Callback = function(Value)
-        _G.AutoFarm = Value
-        print("AutoFarm is now:", Value)
-        if Value then
-            AutoFarm() 
-        end
-    end
-}
-Tab:AddToggle(AutoFarmToggle)
---
-local Section = Tab:AddSection({
-    Name = "AutoRebirth"
-})
-
-local AutoRebirthToggle = {
-    Name = "AutoRebirth",
-    Default = false,
-    Callback = function(Value)
-        _G.AutoRebirthToggle = Value
-        print("AutoRebirth is now:", Value)
-        if Value then
-            AutoRebirthFunction() 
-        end
-    end
-}
-
-Tab:AddToggle(AutoRebirthToggle)
-
---
-local Section = Tab:AddSection({
-    Name = "AutoFarm Frost Gym (1 Rebirth)"
-})
---
-local AutoFarmBarbellToggle = {
-    Name = "AutoFarm Barbell Size >10",
-    Default = false,
-    Callback = function(Value)
-        AutoFarmBarbell = Value
-        if Value then
-            AutoFarmBarbellFunction()
-        end
-        print("AutoFarm Barbell is now:", Value)
-    end    
-}
-Tab:AddToggle(AutoFarmBarbellToggle)
---
-local AutoFarmFrostPressToggle = {
-    Name = "AutoFarm FrostPress Size >10",
-    Default = false,
-    Callback = function(Value)
-        AutoFarmFrostPress = Value
-        if Value then
-            AutoFarmFrostPressFunction()
-        end
-        print("AutoFarm FrostPress is now:", Value)
-    end    
-}
-Tab:AddToggle(AutoFarmFrostPressToggle)
---
-local AutoFarmFrostSquatToggle = {
-    Name = "AutoFarm FrostSquat Size >10",
-    Default = false,
-    Callback = function(Value)
-        AutoFarmFrostSquat = Value
-        if Value then
-            AutoFarmFrostSquatFunction()
-        end
-        print("AutoFarm FrostSquat is now:", Value)
-    end    
-}
-Tab:AddToggle(AutoFarmFrostSquatToggle)
---
-local teleportSec = Window:MakeTab({
-    Name = "Teleport",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-}):AddSection({
-    Name = "Teleport"
-})
-
-teleportSec:AddButton({
-    Name = "Teleport To Start",
-    Callback = function()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(17.3768158, 7.38249779, 339.084686)
-    end
-})
-
-teleportSec:AddButton({
-    Name = "Teleport To Frost Gym(1 Rebirth)",
-    Callback = function()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-2623.02222, 7.38249874, -409.073334)
-    end
-})
-
-teleportSec:AddButton({
-    Name = "Teleport To Mythical Gym(5 Rebirth)",
-    Callback = function()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2250.77832, 7.38249969, 1073.22668)
-    end
-})
-
-teleportSec:AddButton({
-    Name = "Teleport To Eternal Gym(15 Rebirth)",
-    Callback = function()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6758.96387, 7.38251114, -1284.9187)
-    end
-})
-
-teleportSec:AddButton({
-    Name = "Teleport To Legends Gym(30 Rebirth)",
-    Callback = function()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(4603.28174, 991.5354, -3897.86572)
-    end
-})
-
-teleportSec:AddButton({
-    Name = "Teleport To Muscle King Gym(5 Rebirth)",
-    Callback = function()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-8625.93262, 17.2325287, -5730.47217)
-    end
-})
+                                                                                 local OrionLib=       
+                                                                        loadstring(game:HttpGet(                        
+                                                                                                                                  
+                                                                "https://raw.githubusercontent.com/shlexware/Orion/main/source"))();    
+                                                            local Window=OrionLib:MakeWindow({Name="UNI X HUB",HidePremium=false,         
+                                                          SaveConfig=true,ConfigFolder="UNI X HUB"});local SelectFarm;local AutoFarmBarbell 
+                                                        =false;local function EquipTool(toolName)local player=game:GetService("Players").     
+                                                      LocalPlayer;local tool=player.Backpack:FindFirstChild(toolName);if tool then player.      
+                                                    Character.Humanoid:EquipTool(tool);else print("Tool not found in Backpack.");end end local    
+                                                  function AutoFarm()while _G.AutoFarm do wait();pcall(function()local args={[1]="rep"};game:       
+                                                  GetService("Players").LocalPlayer:WaitForChild("muscleEvent"):FireServer(unpack(args));EquipTool(   
+                                                SelectFarm);end);end end local AutoRebirth;local function AutoRebirthFunction()while true do wait(1);if 
+                                                 _G.AutoRebirthToggle then local args={[1]="rebirthRequest"};local success,error=pcall(function()game:    
+                                              GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer(unpack(args));print(                       
+                                              "AutoRebirth triggered.");end);if  not success then warn("AutoRebirth error:",error);end end end end local    
+                                            function AutoFarmBarbellFunction()while AutoFarmBarbell do wait();local player=game.Players.LocalPlayer;local     
+                                            rootPart=player.Character and player.Character:FindFirstChild("HumanoidRootPart") ;if rootPart then rootPart.CFrame 
+                                          =CFrame.new( -2917.47314,12.1008654, -178.445648);local interactSeat=workspace:WaitForChild("machinesFolder"):          
+                                          WaitForChild("Frost Lift"):WaitForChild("interactSeat");game:GetService("ReplicatedStorage").rEvents.                     
+                                          machineInteractRemote:InvokeServer("useMachine",interactSeat);game.Players.LocalPlayer.muscleEvent:FireServer("rep",        
+                                          interactSeat);end end print("AutoFarm Barbell is now:",AutoFarmBarbell);end local function AutoFarmFrostPressFunction()     
+                                        while AutoFarmFrostPress do wait();local player=game.Players.LocalPlayer;local rootPart=player.Character and player.Character:  
+                                        FindFirstChild("HumanoidRootPart") ;if rootPart then rootPart.CFrame= --[[==============================]]CFrame.new( -3019.54858 
+                                        ,34.8637543, -337.746155,0,0,1,0,1,"-0", -1,0,0);local      --[[============================================]]interactSeat=       
+                                        workspace:WaitForChild("machinesFolder"):WaitForChild(  --[[======================================================]]"Frost Lift"):  
+                                      WaitForChild("interactSeat");local args={[1]=         --[[==========================================================]]"useMachine",[2]= 
+                                      workspace:WaitForChild("machinesFolder"):           --[[==============================================================]]WaitForChild(   
+                                      "Frost Press"):WaitForChild("interactSeat")};game:  --[[================================================================]]GetService(     
+                                      "ReplicatedStorage"):WaitForChild("rEvents"):       --[[==================================================================]]WaitForChild( 
+                                      "machineInteractRemote"):InvokeServer(unpack(args)) --[[==================================================================]];game.Players.    
+                                    LocalPlayer.muscleEvent:FireServer("rep",interactSeat --[[====================================================================]]);end end     
+                    print("AutoFarm FrostPress is now:",AutoFarmFrostPress);end local     --[[====================================================================]]function        
+              AutoFarmFrostSquatFunction()while AutoFarmFrostSquat do wait();local player --[[======================================================================]]=game.Players 
+            .LocalPlayer;local rootPart=player.Character and player.Character:            --[[======================================================================]]              
+          FindFirstChild("HumanoidRootPart") ;if rootPart then rootPart.CFrame=CFrame.new --[[======================================================================]]( -2721.65918 
+        ,18.7061043, -627.783203,1,0,0,0,1,0,0,0,1);local interactSeat=workspace:         --[[======================================================================]]WaitForChild( 
+        "machinesFolder"):WaitForChild("Frost Lift"):WaitForChild("interactSeat");local   --[[======================================================================]]args={[1]=    
+      "useMachine",[2]=workspace:WaitForChild("machinesFolder"):WaitForChild(             --[[======================================================================]]"Frost Squat" 
+      ):WaitForChild("interactSeat")};game:GetService("ReplicatedStorage"):WaitForChild(    --[[==================================================================]]"rEvents"):     
+      WaitForChild("machineInteractRemote"):InvokeServer(unpack(args));game.Players.        --[[================================================================]]LocalPlayer.      
+    muscleEvent:FireServer("rep",interactSeat);end end print("AutoFarm FrostSquat is now:", --[[==============================================================]]                  
+    AutoFarmFrostSquat);end local Tab=Window:MakeTab({Name="Main",Icon=                       --[[==========================================================]]                    
+    "rbxassetid://4483345998",PremiumOnly=false});local Section=Tab:AddSection({Name=           --[[====================================================]]                        
+    "AutoFarm - Muscle Legends"});local BLACKPACK={"Weight","Situps","Pushups","Handstands"};Tab: --[[==============================================]]AddDropdown({Name=        
+    "Select Farm",Options=BLACKPACK,Default="",Callback=function(Value)SelectFarm=Value;end});local   --[[====================================]]AutoFarmToggle={Name=         
+    "AutoFarm",Default=false,Callback=function(Value)_G.AutoFarm=Value;print("AutoFarm is now:",Value);if --[[========================]] Value then AutoFarm();end end};Tab:  
+    AddToggle(AutoFarmToggle);local Section=Tab:AddSection({Name="AutoRebirth"});local AutoRebirthToggle={Name="AutoRebirth",Default=false,Callback=function(Value)_G.      
+  AutoRebirthToggle=Value;print("AutoRebirth is now:",Value);if Value then AutoRebirthFunction();end end};Tab:AddToggle(AutoRebirthToggle);local Section=Tab:AddSection({ 
+  Name="AutoFarm Frost Gym (1 Rebirth)"});local AutoFarmBarbellToggle={Name="AutoFarm Barbell Size >10",Default=false,Callback=function(Value)AutoFarmBarbell=Value;if  
+  Value then AutoFarmBarbellFunction();end print("AutoFarm Barbell is now:",Value);end};Tab:AddToggle(AutoFarmBarbellToggle);local AutoFarmFrostPressToggle={Name=        
+  "AutoFarm FrostPress Size >10",Default=false,Callback=function(Value)AutoFarmFrostPress=Value;if Value then AutoFarmFrostPressFunction();end print(                     
+  "AutoFarm FrostPress is now:",Value);end};Tab:AddToggle(AutoFarmFrostPressToggle);local AutoFarmFrostSquatToggle={Name="AutoFarm FrostSquat Size >10",Default=false,    
+  Callback=function(Value)AutoFarmFrostSquat=Value;if Value then AutoFarmFrostSquatFunction();end print("AutoFarm FrostSquat is now:",Value);end};Tab:AddToggle(          
+  AutoFarmFrostSquatToggle);local teleportSec=Window:MakeTab({Name="Teleport",Icon="rbxassetid://4483345998",PremiumOnly=false}):AddSection({Name="Teleport"});           
+  teleportSec:AddButton({Name="Teleport To Start",Callback=function()game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new(17.3768158,7.38249779,         
+  339.084686);end});teleportSec:AddButton({Name="Teleport To Frost Gym(1 Rebirth)",Callback=function()game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.  
+  new( -2623.02222,7.38249874, -409.073334);end});teleportSec:AddButton({Name="Teleport To Mythical Gym(5 Rebirth)",Callback=function()game.Players.LocalPlayer.Character 
+  .HumanoidRootPart.CFrame=CFrame.new(2250.77832,7.38249969,1073.22668);end});teleportSec:AddButton({Name="Teleport To Eternal Gym(15 Rebirth)",Callback=function()game.  
+  Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new( -6758.96387,7.38251114, -1284.9187);end});teleportSec:AddButton({Name=                                  
+  "Teleport To Legends Gym(30 Rebirth)",Callback=function()game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new(4603.28174,991.5354, -3897.86572);end});   
+  teleportSec:AddButton({Name="Teleport To Muscle King Gym(5 Rebirth)",Callback=function()game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new( -          
+  8625.93262,17.2325287, -5730.47217);end});                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+--------------------------------------------------------------------------------
