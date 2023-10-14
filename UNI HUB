@@ -1,42 +1,9 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "UNI HUB", HidePremium = False, SaveConfig = true, ConfigFolder = "UNI HUB"})
---
-local Tab = Window:MakeTab({
-	Name = "Main",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
---
-local Section = Tab:AddSection({
-	Name = "AutoFarm - Muscle Legends"
-})
---
-BLACKPACK = {"Weight", "Situps", "Pushups", "Handstands"}
+local Window = OrionLib:MakeWindow({Name = "UNI HUB", HidePremium = false, SaveConfig = true, ConfigFolder = "UNI HUB"})
 
-Tab:AddDropdown({
-	Name = "Select Farm",
-	Options = BLACKPACK,
-  Default = "",
-	Callback = function(Value)
-		SelectFarm = Value
-	end    
-})
---
-local AutoFarmToggle = {
-    Name = "AutoFarm",
-    Default = false,
-    Callback = function(Value)
-        _G.AutoFarm = Value
-        print("AutoFarm is now:", Value)
-        if Value then
-            AutoFarm() 
-        end
-    end
-}
---
-Tab:AddToggle(AutoFarmToggle)
+local SelectFarm 
 
-function EquipTool(toolName)
+local function EquipTool(toolName)
     local player = game:GetService("Players").LocalPlayer
     local tool = player.Backpack:FindFirstChild(toolName)
 
@@ -47,7 +14,7 @@ function EquipTool(toolName)
     end
 end
 
-function AutoFarm()
+local function AutoFarm()
     while _G.AutoFarm do
         wait()
         pcall(function()
@@ -61,35 +28,122 @@ function AutoFarm()
         end)
     end
 end
---
-local Tab = Window:MakeTab({
-	Name = "Rebirth",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
---
-local autoRebirthToggle = false
 
-Tab:AddToggle({
-    Name = "AutoRebirth",
-    Default = false,
-    Callback = function(Value)
-        autoRebirthToggle = Value 
-        print("AutoRebirth toggled: " .. tostring(autoRebirthToggle)) 
-    end
-})
-
-while true do
-    wait(1) 
-    
-    if autoRebirthToggle then
-        local args = {
-            [1] = "rebirthRequest"
-        }
-        game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer(unpack(args))
-        print("AutoRebirth triggered.")
+local function AutoRebirth()
+    while true do
+        wait(1) 
+        
+        if _G.autoRebirthToggle then
+            local args = {
+                [1] = "rebirthRequest"
+            }
+            game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer(unpack(args))
+            print("AutoRebirth triggered.")
+        end
     end
 end
 
+local Tab = Window:MakeTab({
+    Name = "Main",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
+local Section = Tab:AddSection({
+    Name = "AutoFarm - Muscle Legends"
+})
+
+local BLACKPACK = {"Weight", "Situps", "Pushups", "Handstands"}
+
+Tab:AddDropdown({
+    Name = "Select Farm",
+    Options = BLACKPACK,
+    Default = "",
+    Callback = function(Value)
+        SelectFarm = Value
+    end    
+})
+
+local AutoFarmToggle = {
+    Name = "AutoFarm",
+    Default = false,
+    Callback = function(Value)
+        _G.AutoFarm = Value
+        print("AutoFarm is now:", Value)
+        if Value then
+            AutoFarm() 
+        end
+    end
+}
+
+Tab:AddToggle(AutoFarmToggle)
+
+local Rebirth = Window:MakeTab({
+    Name = "Rebirth",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+Rebirth:AddToggle({
+    Name = "AutoRebirth",
+    Default = false,
+    Callback = function(Value)
+        _G.autoRebirthToggle = Value 
+        print("AutoRebirth toggled: " .. tostring(_G.autoRebirthToggle)) 
+    end
+})
+
+spawn(AutoRebirth)
+
+local TeleportTab = Window:MakeTab({
+    Name = "Teleport",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local teleportSec = TeleportTab:AddSection({
+    Name = "Teleport"
+})
+
+teleportSec:AddButton({
+    Name = "Teleport To Start",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(17.3768158, 7.38249779, 339.084686)
+    end
+})
+
+teleportSec:AddButton({
+    Name = "Teleport To Frost Gym(1 Rebirth)",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-2623.02222, 7.38249874, -409.073334)
+    end
+})
+
+teleportSec:AddButton({
+    Name = "Teleport To Mythical Gym(5 Rebirth)",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2250.77832, 7.38249969, 1073.22668)
+    end
+})
+
+teleportSec:AddButton({
+    Name = "Teleport To Eternal Gym(15 Rebirth)",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6758.96387, 7.38251114, -1284.9187)
+    end
+})
+
+teleportSec:AddButton({
+    Name = "Teleport To Legends Gym(30 Rebirth)",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(4603.28174, 991.5354, -3897.86572)
+    end
+})
+
+teleportSec:AddButton({
+    Name = "Teleport To Muscle King Gym(5 Rebirth)",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-8625.93262, 17.2325287, -5730.47217)
+    end
+})
 
